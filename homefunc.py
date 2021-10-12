@@ -4,7 +4,7 @@
     telecommunications Engineering Students @ SUPCOM [ HIGHER SCHOOL OF COMMUNICATIONS OF TUNIS]
     date: 12/10/2021
 """
-from EG9x.atcommand import *
+from atcommand import *
 import serial.tools.list_ports
 import time
 
