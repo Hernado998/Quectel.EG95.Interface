@@ -1,6 +1,5 @@
 from paho.mqtt import client as mqtt_client
-import random as rnd
-from InitiateCom import InitiateCom
+from atcommand import *
 
 broker = "10.42.0.219"
 port = "1883"
@@ -11,16 +10,12 @@ msgID = "5000"
 username = "admin"
 password = "admin"
 
-serialPort = "/dev/ttyUSB0"
-
 class QuectelEG95Mqtt:
 
     def __init__(self,clientidx,broker,port):
         self.clientidx = clientidx
         self.broker = broker
         self.port=port
-        self.initiate=InitiateCom(serialPort)
-        self.initiate.connectQuectelEG95()
 
     def openNetwork_mqtt(self):
         args= self.clientidx+","+self.broker+","+self.port+"\r\n"
