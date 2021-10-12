@@ -51,7 +51,8 @@ class QuectelEG95Mqtt:
         Response = self.sendATCommand(PUBLISH_MQTT,args)
         return Response
 
-    def readMessage_mqtt(self, args=clientidx):
+    def readMessage_mqtt(self):
+        args=self.clientidx
         Response=self.sendATCommand(READ_MSG_MQTT,args)
         return Response
 
