@@ -23,7 +23,13 @@ class eg9x:
                 break    
         self.serial=serial.Serial(self.SerialPort, 460800, timeout=0.3)
         
-
+    '''
+    Disconnect the module
+    '''
+    def disconnectQuectelEG95(self):
+        self.serial.close()
+        
+        
     ''' 
     Check for the response from the Module
     @data : the returned data from the module
