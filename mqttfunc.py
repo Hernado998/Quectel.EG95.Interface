@@ -1,6 +1,7 @@
 from paho.mqtt import client as mqtt_client
 from atcommand import *
-
+import serial.tools.list_ports
+import time
 '''
 Parameters for testing purposes
 '''
@@ -22,7 +23,38 @@ class QuectelEG95Mqtt:
         self.clientidx = clientidx
         self.broker = broker
         self.port=port
-        
+        ports = ["/dev/ttyACM0"]
+        print(ports)
+        if(len(ports)==0):
+            
+            print("Please Connect the module to USB Cable\n")
+            while(len(ports)==0):
+                ports = serial.tools.list_ports.comports()
+                
+        for port in ports:
+            ser=serial.Serial(port, 115200, timeout=5)
+            if(ser.is_open):
+                self.SerialPort=port
+                break    
+        self.serial=serial.Serial(self.SerialPort, 115200, timeout=5)
+        print("Instanciation of Object : Done")
+    ''' 
+    Send At Commands to the Module
+    @command : the AT Command to Send
+    @args    : Arguments if needed for the At Command
+    '''
+    def sendATCommand(self,command,args=""):
+        to_send=""                          # Command to send
+        if (len(command.string)!=0):
+            to_send+=command.string
+        if(len(args)!=0):
+            to_send=to_send[:-2]+args+str('\r\n')
+        ser=self.serial  
+        time.sleep(2)             
+        ser.write(bytes(to_send, 'utf-8'))                  # Send the Command
+        results=ser.readlines()  
+        status=self.checkResponse(results)
+        return status.decode("utf-8")   
     '''
     Open a MQTT network to enable client-broker connexion
     '''

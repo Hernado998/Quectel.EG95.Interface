@@ -1,12 +1,17 @@
+# -*- coding: utf-8 -*-
 '''
 TEST Basic functions of EG9x Library
 '''
-#from EG9x import QuectelEG9x
-from QuectelEG9x import QuectelEG9x
+
+from homefunc import QuectelEG9x
+from phonecall import QuectelEG95Call
+#from QuectelEG9x import QuectelEG9x
 
 EG95=QuectelEG9x()
+EG95Call = QuectelEG95Call()
 
 while(1):
+    print(EG95Call.Call())
     #Request Manufacturer ID of the module
     print(EG95.requestManufacturerId())
     #Get Device ID of the module

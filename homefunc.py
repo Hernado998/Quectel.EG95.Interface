@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
     eg9x class definition to control and manage the EG9x module 
     Authors : Iheb Omar Soula and Nadir Hermassi
@@ -17,12 +18,15 @@ class QuectelEG9x:
     Connect the module through UART
     '''
     def __init__(self):
-        ports = serial.tools.list_ports.comports()
+        ports = ["/dev/ttyACM0"]
+        print(ports)
         if(len(ports)==0):
+            
             print("Please Connect the module to USB Cable\n")
             while(len(ports)==0):
                 ports = serial.tools.list_ports.comports()
-        for port,desc, hwid in ports:
+                
+        for port in ports:
             ser=serial.Serial(port, 115200, timeout=5)
             if(ser.is_open):
                 self.SerialPort=port
