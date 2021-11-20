@@ -49,16 +49,28 @@ class QuectelEG95Call:
     @args : the attached mode 
     '''
     def Call(self):
-        number=input("Enter Number\n")
+        number=str(input("Enter Number\n"))+";"
         Response= self.sendATCommand(CALL_NUMBER,number)
         self.CalledNumbers += [number]
         print(self.Called_Number)
         return Response
     '''
+    Cancel Call
+    '''
+    def cancelCall(self):
+        Response= self.sendATCommand(CANCEL_CALL)
+        return Response
+    '''
+    Answer Call
+    '''   
+    def answer_call(self):
+        Response= self.sendATCommand(ANSWER_CALL)
+        return Response
+    '''
     End Call
     '''
     def HungUpCall(self):
-        Response= self.sendATCommand(HUNG_UP_CALL,number)
+        Response= self.sendATCommand(HUNG_UP_CALL)
         return Response
 
     
