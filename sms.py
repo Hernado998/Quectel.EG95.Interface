@@ -130,6 +130,7 @@ class QuectelEG9x:
     '''   
     def DELETE_SMS(self,args="1,4"):
         Response=self.sendATCommand(DELETE_SMS,args)
+        return Response
     '''
     SMS EVENT REPORTING CONFIGURATION
     @args : the attached Storage Area
