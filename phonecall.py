@@ -49,7 +49,7 @@ class QuectelEG95Call:
     @args : the attached mode 
     '''
     def Call(self):
-        number=str(input("Enter Number\n"))+";"
+        number=input("Enter Number\n")+";"
         Response= self.sendATCommand(CALL_NUMBER,number)
         self.CalledNumbers += [number]
         print(self.Called_Number)
