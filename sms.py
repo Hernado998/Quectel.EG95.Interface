@@ -11,35 +11,48 @@ import serial.tools.list_ports
 import time
 
 
-class QuectelEG9x:
+class QuectelEG95SMS:
+
+    def __init__(self,serial):
+        self.serial=serial
+   
+        
+    ''' 
+    Check for the response from the Module
+    @data : the returned data from the module
+    '''
+    def checkResponse(self,data):
+        Status=bytes("", 'utf-8')
+        if(len(data)==0):
+            Status=bytes("ERROR", 'utf-8')
+            return Status
+        
+        for string in data:
+            for character in range(len(str(string))-1):
+                ch=str(string)
+                if ch[character]=="O" and ch[character+1]=="K":
+                    for byte in data:
+                        Status+=byte
+                    break
+        return Status
 
     ''' 
-    Connect the module through UART
+    Send At Commands to the Module
+    @command : the AT Command to Send
+    @args    : Arguments if needed for the At Command
     '''
-    def __init__(self):
-        ports = serial.tools.list_ports.comports()
-        self.SerialPort=ports[-1][0]
-        if(len(ports)==0):
-            print("Please Connect the module to USB Cable\n")
-            while(len(ports)==0):
-                ports = serial.tools.list_ports.comports()
-        for port,desc, hwid in ports:
-            try:
-                self.serial=serial.Serial(port, 115200, timeout=1)
-                if(not(self.serial.open())):
-                    continue
-                response=self.requestManufacturerId()
-                print(port)
-                print(response)
-                if "Quectel" in str(response):
-                    self.SerialPort=port
-                    break
-                else:
-                    continue
-            except:
-                continue   
-        self.serial=serial.Serial(self.SerialPort, 115200, timeout=5)   
-        print("Instanciation of Object : Done")
+    def sendATCommand(self,command,args=""):
+        to_send=""                          # Command to send
+        if (len(command.string)!=0):
+            to_send+=command.string
+        if(len(args)!=0):
+            to_send=to_send[:-2]+args+str('\r\n')
+        ser=self.serial  
+        time.sleep(2)             
+        ser.write(bytes(to_send, 'utf-8'))                  # Send the Command
+        results=ser.readlines()  
+        status=self.checkResponse(results)
+        return status.decode("utf-8")
         
     '''
     Get SMS mode Status

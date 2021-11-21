@@ -3,19 +3,27 @@
 TEST Basic functions of EG9x Library
 '''
 
-from homefunc import QuectelEG9x
+from homefunc import QuectelEG95
 from phonecall import QuectelEG95Call
 from sms import QuectelEG95SMS
+from mqttfunc import QuectelEG95Mqtt
+from USBinit import usbInit
 #from QuectelEG9x import QuectelEG9x
 
-EG95=QuectelEG9x()
-EG95Call = QuectelEG95Call()
-EG95SMS = QuectelEG95SMS()
+UARTinit = usbInit()
+serial = UARTinit.get()
+EG95=QuectelEG95(serial)
+EG95Call = QuectelEG95Call(serial)
+EG95SMS = QuectelEG95SMS(serial)
+#EG95MQTT = QuectelEG95Mqtt()
 
 while(1):
+    
+    #26162201
+   
     #Request Manufacturer ID of the module
     print(EG95.requestManufacturerId())
-    #Get Device ID of the module
+    #Get Device ID of the mo26162201dule
     print(EG95.deviceModule())
     #Get firmeware of the module
     print(EG95.firmwareVersion())

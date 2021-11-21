@@ -5,27 +5,28 @@ import time
 
 class QuectelEG95Call:
 
-    ''' 
-    Connect the module through UART
-    '''
-    def __init__(self,CalledNumbers):
-        self.CalledNumbers=CalledNumbers
+    def __init__(self,serial):
+        self.serial=serial
         self.CalledNumbers=[]
-        ports = ["/dev/ttyACM0"]
-        print(ports)
-        if(len(ports)==0):
-            
-            print("Please Connect the module to USB Cable\n")
-            while(len(ports)==0):
-                ports = serial.tools.list_ports.comports()
-                
-        for port in ports:
-            ser=serial.Serial(port, 115200, timeout=5)
-            if(ser.is_open):
-                self.SerialPort=port
-                break    
-        self.serial=serial.Serial(self.SerialPort, 115200, timeout=5)
-        print("Instanciation of Object : Done")
+
+    ''' 
+    Check for the response from the Module
+    @data : the returned data from the module
+    '''
+    def checkResponse(self,data):
+        Status=bytes("", 'utf-8')
+        if(len(data)==0):
+            Status=bytes("ERROR", 'utf-8')
+            return Status
+        
+        for string in data:
+            for character in range(len(str(string))-1):
+                ch=str(string)
+                if ch[character]=="O" and ch[character+1]=="K":
+                    for byte in data:
+                        Status+=byte
+                    break
+        return Status
 
     ''' 
     Send At Commands to the Module
@@ -43,7 +44,8 @@ class QuectelEG95Call:
         ser.write(bytes(to_send, 'utf-8'))                  # Send the Command
         results=ser.readlines()  
         status=self.checkResponse(results)
-        return status.decode("utf-8")  
+        return status.decode("utf-8")
+
     '''
     Start Call
     @args : the attached mode 
@@ -52,18 +54,18 @@ class QuectelEG95Call:
         number=input("Enter Number\n")+";"
         Response= self.sendATCommand(CALL_NUMBER,number)
         self.CalledNumbers += [number]
-        print(self.Called_Number)
+        print(self.CalledNumbers)
         return Response
     '''
     Cancel Call
     '''
-    def cancelCall(self):
+    def CancelCall(self):
         Response= self.sendATCommand(CANCEL_CALL)
         return Response
     '''
     Answer Call
     '''   
-    def answer_call(self):
+    def AnswerCall(self):
         Response= self.sendATCommand(ANSWER_CALL)
         return Response
     '''
@@ -73,6 +75,28 @@ class QuectelEG95Call:
         Response= self.sendATCommand(HUNG_UP_CALL)
         return Response
 
+    def Ringing(self):
+        Response= self.sendATCommand(CALL_RINGING)
+        return Response
+
+    def AutomaticAnswerBeforeRings(self,number):
+        Response=self.sendATCommand(VOICE_OVER_USB,str(number))
+        return Response
+
+    def VoiceOverUSB(self,args="1,0"):
+        Response=self.sendATCommand(VOICE_OVER_USB,args)
+        return Response 
+
+    def SwithDataToCommand(self):
+        time.sleep(1)
+        Response=self.sendATCommand(SWITH_DATA_MODE_TO_COMMAND_MODE)
+        time.sleep(1)
+        return Response
+    def SwitchCommandToData(self):
+        time.sleep(1)
+        Response=self.sendATCommand(SWITH_COMMAND_MODE_TO_DATA_MODE)
+        time.sleep(1)
+        return Response
     
 
     

@@ -12,28 +12,10 @@ import serial.tools.list_ports
 import time
 
 
-class QuectelEG9x:
-
-    ''' 
-    Connect the module through UART
-    '''
-    def __init__(self):
-        ports = ["/dev/ttyACM0"]
-        print(ports)
-        if(len(ports)==0):
-            
-            print("Please Connect the module to USB Cable\n")
-            while(len(ports)==0):
-                ports = serial.tools.list_ports.comports()
-                
-        for port in ports:
-            ser=serial.Serial(port, 115200, timeout=5)
-            if(ser.is_open):
-                self.SerialPort=port
-                break    
-        self.serial=serial.Serial(self.SerialPort, 115200, timeout=5)
-        print("Instanciation of Object : Done")
-        
+class QuectelEG95:
+    
+    def __init__(self,serial):
+        self.serial=serial    
 
     ''' 
     Check for the response from the Module

@@ -23,21 +23,6 @@ class QuectelEG95Mqtt:
         self.clientidx = clientidx
         self.broker = broker
         self.port=port
-        ports = ["/dev/ttyACM0"]
-        print(ports)
-        if(len(ports)==0):
-            
-            print("Please Connect the module to USB Cable\n")
-            while(len(ports)==0):
-                ports = serial.tools.list_ports.comports()
-                
-        for port in ports:
-            ser=serial.Serial(port, 115200, timeout=5)
-            if(ser.is_open):
-                self.SerialPort=port
-                break    
-        self.serial=serial.Serial(self.SerialPort, 115200, timeout=5)
-        print("Instanciation of Object : Done")
     ''' 
     Send At Commands to the Module
     @command : the AT Command to Send
