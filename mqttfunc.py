@@ -19,10 +19,9 @@ class QuectelEG95Mqtt:
     '''
     Initialize the brokers parameters and the client idx
     '''
-    def __init__(self,clientidx,broker,port):
-        self.clientidx = clientidx
-        self.broker = broker
-        self.port=port
+    def __init__(self,serial):
+        self.serial=serial
+        
     ''' 
     Send At Commands to the Module
     @command : the AT Command to Send
@@ -39,36 +38,70 @@ class QuectelEG95Mqtt:
         ser.write(bytes(to_send, 'utf-8'))                  # Send the Command
         results=ser.readlines()  
         status=self.checkResponse(results)
-        return status.decode("utf-8")   
+        return status.decode("utf-8")  
+    
+    ''' 
+    Check for the response from the Module
+    @data : the returned data from the module
+    '''
+    def checkResponse(self,data):
+        Status=bytes("", 'utf-8')
+        if(len(data)==0):
+            Status=bytes("ERROR", 'utf-8')
+            return Status
+        
+        for string in data:
+            for character in range(len(str(string))-1):
+                ch=str(string)
+                if ch[character]=="O" and ch[character+1]=="K":
+                    for byte in data:
+                        Status+=byte
+                    break
+        return Status
+
+    '''
+    CONFIGURE_RECEIVE_MODE
+    '''
+    def ConfigureReceiveMode(self,args):
+        Response=self.sendATCommand(CONFIGURE_RECEIVE_MODE,args)
+        return Response
+    '''
+    Store certificate
+    '''
+    def StoreCertificate(self,args):
+        Response=self.sendATCommand(STORE_CERTFICATE,args)
+        return Response
+    '''
+    Configure SSL certificate
+    '''
+    def ConfigureCertificate(self,args):
+        Response=self.sendATCommand(CONFIGURE_CERTIFICATE,args)
+        return Response
     '''
     Open a MQTT network to enable client-broker connexion
     '''
-    def openNetwork_mqtt(self):
-        args= self.clientidx+","+self.broker+","+self.port+"\r\n"
+    def OpenNetworkMqtt(self,args):
         Response = self.sendATCommand(OPEN_NETWORK_MQTT,args)
         return Response
     
     '''
     Close MQTT network
     '''
-    def closeNetwork_mqtt(self):
-        args = self.clientidx+"\r\n"
+    def CloseNetworkMqtt(self,args):
         Response = self.sendATCommand(CLOSE_NETWORK_MQTT,args)
         return Response
     
     '''
     Connect to MQTT broker
     '''
-    def connect_mqtt(self,clientID,username,password):
-        args = self.clientidx+","+clientID+"[,"+username+"[,"+password+"\r\n"
+    def ConnectMqtt(self,args):
         Response = self.sendATCommand(CONNECT_MQTT,args)
         return Response
     
     '''
     Disconnect from the MQTT broker
     '''
-    def disconnect_mqtt(self,clientID,username,password):
-        args = self.clientidx+"\r\n"
+    def DisconnectMqtt(self,args):
         Response = self.sendATCommand(DISCONNECT_MQTT,args)
         return Response
 
@@ -78,16 +111,14 @@ class QuectelEG95Mqtt:
     1: send multiple pakages until one of them arrives 
     2: send one package at a time until we get an acknowledgment
     '''
-    def subscribe_mqtt(self,msgID,topic,qos):
-        args = self.clientidx+","+msgID+","+topic+","+str(qos)+"\r\n"
+    def SubscribeMqtt(self,args):
         Response = self.sendATCommand(SUBSCRIBE_MQTT,args)
         return Response
     
     '''
     Unsubscribe
     '''
-    def unsebscribe_mqtt(self,msgID,topic):
-        args = self.clientidx+","+msgID+","+topic+","+"\r\n"
+    def UnsebscribeMqtt(self,args):
         Response = self.sendATCommand(UNSUBSCRIBE_MQTT,args)
         return Response
     
@@ -97,16 +128,14 @@ class QuectelEG95Mqtt:
     1: send multiple pakages until one of them arrives 
     2: send one package at a time until we get an acknowledgment
     '''
-    def publish_mqtt(self,msgID,qos,retain,topic,msg_len):
-        args= str(self.clientidx)+','+str(msgID)+','+str(qos)+','+str(retain)+','+topic+','+str(msg_len)+'\r\n'
+    def PublishMqtt(self,args):
         Response = self.sendATCommand(PUBLISH_MQTT,args)
         return Response
     
     '''
     Read message comming from the broker
     '''
-    def readMessage_mqtt(self):
-        args=self.clientidx
+    def ReadMessageMqtt(self,args):
         Response=self.sendATCommand(READ_MSG_MQTT,args)
         return Response
 

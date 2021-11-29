@@ -53,6 +53,25 @@ class QuectelEG95:
         results=ser.readlines()  
         status=self.checkResponse(results)
         return status.decode("utf-8")
+
+    '''
+    Set phone functionality
+    '''
+    def setPhoneFunctionality(self,args):
+        Response= self.sendATCommand(SET_PHONE_FUNCTIONALITY,args)
+        return Response
+    '''
+    Signal Quality Report
+    '''
+    def siggnalQualityReportAndQuery(self,args):
+        Response= self.sendATCommand(SIGNAL_QUALITY_REPORT_AND_QUERY,args)
+        return Response
+    '''
+    Operator selection
+    '''
+    def operatorSelection(self,args):
+        Response= self.sendATCommand(OPERATOR_SELECTION,args)
+        return Response
     '''
     Get Manufacturer ID of the module
     '''
@@ -71,7 +90,54 @@ class QuectelEG95:
     def firmwareVersion(self):
         Response=self.sendATCommand(FIRMWARE_VS)
         return Response
-    
+    '''
+    Configure parameters to TCP/IP context
+    '''
+    def configureParamTcpIPContext(self,args):
+        Response=self.sendATCommand(CONFIGURE_PARAMETERS_TCP_IP_CONTEXT,args)
+        return Response
+    '''
+    Activate PDP context
+    '''
+    def activatePdpContext(self,args):
+        Response=self.sendATCommand(ACTIVATE_PDP_CONTEXT,args)
+        return Response
+    '''
+    Desactivate PDP context
+    '''
+    def desactivatePdpContext(self,args):
+        Response=self.sendATCommand(DESACTIVATE_PDP_CONTEXT,args)
+        return Response
+    '''
+    Open socket service 
+    '''
+    def openSocketService(self,args):
+        Response=self.sendATCommand(OPEN_SOCKET_SERVICE,args)
+        return Response
+    '''
+    Close socket service 
+    '''
+    def closeSocketService(self,args):
+        Response=self.sendATCommand(CLOSE_SOCKET_SERVICE,args)
+        return Response
+    '''
+    Ping
+    '''
+    def ping(self,args):
+        Response=self.sendATCommand(PING,args)
+        return Response
+    '''
+    Query socket service status
+    '''
+    def socketServiceStatus(self,args):
+        Response=self.sendATCommand(QUERY_SOCKET_SERVICE_STATUS,args)
+        return Response
+    '''
+    Define PDP context, this function will let the module to connect to the internet
+    '''
+    def definePDPConntext(self,args):
+        Response=self.sendATCommand(DEFINE_PDP_CONTEXT,args)
+        return Response
     '''
     Get Network Registration 
     '''   
