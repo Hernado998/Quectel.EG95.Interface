@@ -8,7 +8,8 @@ class QuectelEG95Call:
     def __init__(self,serial):
         self.serial=serial
         self.CalledNumbers=[]
-
+        self.callState = False
+        self.answerState = False
     ''' 
     Check for the response from the Module
     @data : the returned data from the module
@@ -50,29 +51,34 @@ class QuectelEG95Call:
     Start Call
     @args : the attached mode 
     '''
-    def Call(self):
-        number=input("Enter Number\n")+";"
-        Response= self.sendATCommand(CALL_NUMBER,number)
-        self.CalledNumbers += [number]
-        print(self.CalledNumbers)
+    def Call(self,number):
+        Response= self.sendATCommand(CALL_NUMBER,number+";")
+        #self.CalledNumbers += [number]
+        #print(self.CalledNumbers)
+        self.callState=True
         return Response
     '''
     Cancel Call
     '''
     def CancelCall(self):
         Response= self.sendATCommand(CANCEL_CALL)
+        self.answerState=False
+        self.callState=False
         return Response
     '''
     Answer Call
     '''   
     def AnswerCall(self):
         Response= self.sendATCommand(ANSWER_CALL)
+        self.answerState=True
         return Response
     '''
     End Call
     '''
     def HungUpCall(self):
         Response= self.sendATCommand(HUNG_UP_CALL)
+        self.callState = False
+        self.answerState=False
         return Response
 
     def Ringing(self):
@@ -97,6 +103,7 @@ class QuectelEG95Call:
         Response=self.sendATCommand(SWITH_COMMAND_MODE_TO_DATA_MODE)
         time.sleep(1)
         return Response
+   
     
 
     

@@ -33,8 +33,7 @@ class QuectelEG95Mqtt:
             to_send+=command.string
         if(len(args)!=0):
             to_send=to_send[:-2]+args+str('\r\n')
-        ser=self.serial  
-        time.sleep(2)             
+        ser=self.serial              
         ser.write(bytes(to_send, 'utf-8'))                  # Send the Command
         results=ser.readlines()  
         status=self.checkResponse(results)

@@ -48,7 +48,7 @@ class QuectelEG95SMS:
         if(len(args)!=0):
             to_send=to_send[:-2]+args+str('\r\n')
         ser=self.serial  
-        time.sleep(2)             
+                    
         ser.write(bytes(to_send, 'utf-8'))                  # Send the Command
         results=ser.readlines()  
         status=self.checkResponse(results)
@@ -83,15 +83,15 @@ class QuectelEG95SMS:
     Send SMS Message
     @args : the attached mode 
     '''       
-    def SendSMS(self):
+    def SendSMS(self,number,message_text):
         mode=1
         if "PDU" in str(self.GetSMSMode()):
             mode=0
         if(mode):
-            number='"'+str(input("Enter Number\n"))+'"'
+            #number='"'+str(input("Enter Number\n"))+'"'
             print(number)
             self.sendATCommand(SEND_SMS_NUMBER,number)
-            message_text=input("Enter Message\n")
+            #message_text=input("Enter Message\n")
             self.sendATCommand(NOTHING,message_text)
             time.sleep(0.5)
             Response=self.sendATCommand(NOTHING,chr(26))
@@ -127,12 +127,12 @@ class QuectelEG95SMS:
     @args : the attached Storage Area
     Default : list ALL message in text mode 
     '''
-    def READ_LIST_MESSAGE(self,args='"ALL"'):
+    def READ_LIST_MESSAGE(self,args="1"):
         mode=self.GetSMSMode()
-        if("PDU" in str(mode)):
+        '''if("PDU" in str(mode)):
             mode=0
         else:
-            mode=1
+            mode=1'''
         Response=self.sendATCommand(READ_SMS_LIST,args)
         return Response
 
@@ -153,3 +153,7 @@ class QuectelEG95SMS:
         self.SetSMSMode("1")
         self.SetSMSChar('"GSM"')
         Response=self.sendATCommand(SMS_EVT_RP_CONF,args)
+
+    def BIT_ENCODING(self):
+        Response=self.sendATCommand(SEVEN_BIT_ENCODING)
+        return Response

@@ -47,8 +47,7 @@ class QuectelEG95:
             to_send+=command.string
         if(len(args)!=0):
             to_send=to_send[:-2]+args+str('\r\n')
-        ser=self.serial  
-        time.sleep(2)             
+        ser=self.serial              
         ser.write(bytes(to_send, 'utf-8'))                  # Send the Command
         results=ser.readlines()  
         status=self.checkResponse(results)
@@ -83,6 +82,12 @@ class QuectelEG95:
     '''
     def deviceModule(self):
         Response= self.sendATCommand(DEVICE_ID)
+        return Response
+    '''
+    Get own SIM card number
+    '''
+    def myNumber(self):
+        Response=self.sendATCommand(OWN_NUMBER)
         return Response
     '''
     Get firmeware of the module
@@ -156,7 +161,7 @@ class QuectelEG95:
     Get list of Preferred Operators
     @args : test / read / write , default to Read
     '''    
-    def preferredOperator(self,args="?"):
+    def preferredOperator(self,args=""):
         Response=self.sendATCommand(PREFERED_OPERATORS_LIST,args)
         return Response
     '''

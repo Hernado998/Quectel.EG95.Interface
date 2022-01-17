@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import serial.tools.list_ports
-import serial
+import serial 
 
 class usbInit():
     ''' 
     Connect the module through UART
     '''
     def __init__(self):
-        ports = ["/dev/ttyUSB2"]
+        ports = ["/dev/ttyUSB3"]
         #ports = serial.tools.list_ports.comports()
         print(ports)
         '''self.SerialPort=ports[-1][0]
